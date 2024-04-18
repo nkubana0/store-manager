@@ -10,18 +10,36 @@ class Item:
         assert quantity >= 0, f"Quantity : {quantity} is not equal or greater than zero!"
         
         #assign self objects
-        self.name = name
-        self.price = price
+        self.__name = name
+        self.__price = price
         self.quantity = quantity
 
         #append items to all
         Item.all.append(self)
 
-    def calculate_total_price(self):
-        return self.price * self.quantity
-    
+    @property
+    def price(self):
+        return self.__price
+        
     def apply_discount(self):
-        self.price = self.price * self.pay_rate
+        self.__price = self.__price * self.pay_rate
+        
+    def apply_increment(self, increment_value):
+        self.__price = self.__price + self.__price * increment_value
+        
+    @property
+    def name(self):
+        return self.name
+        
+    @name.setter
+    def name(self, value):
+        if len(value) > 10:
+            raise Exception('The name is too long')
+        else:
+            self.__name = value
+    
+    def calculate_total_price(self):
+        return self.__price * self.quantity
 
     @classmethod
     def instatiate_from_csv(cls):
@@ -46,4 +64,16 @@ class Item:
             return False
 
     def __repr__(self):
-        return f"Item ('{self.name}', {self.price}, {self.quantity})"
+        return f"Item ('{self.name}', {self.__price}, {self.quantity})"
+    
+    def connect(self, smpt_server):
+        pass
+
+    def prepare_body(self):
+        return f"""
+        Hello Sir/Madam.
+        We have {self.name} {self.quantity} times.
+        Regards, Shema Ivan
+        """
+    def send_email(self):
+        pass
